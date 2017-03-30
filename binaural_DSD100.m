@@ -1,16 +1,20 @@
 %DSD100 directory
-s = dir('DSD6/Sources/Test');
+
+DSD100_path = 'your_DSD100_path' + 'Sources/Test/'
+binaural_DSD100_path = 'your_output_folder'
+
+s = dir(DSD100_path);
 
 %It takes the names of each song folder
 folder_list = {s.name};
 folder_list = string(folder_list(3:end));
 
-%For loop for all the DSD100 dataset
+%For loop for all DSD100 dataset
 for idx = 1:numel(folder_list)
     
     %Input and output path for each song
-    inputpath = '/Users/gerard/smc_local/master_thesis/bin_dataset/TwoEars-master/DSD6/Sources/Test/' + folder_list(idx) + '/';
-    outputpath = '/Users/gerard/smc_local/master_thesis/bin_dataset/TwoEars-master/BDSD6/Sources/Test/' + folder_list(idx) + '/';
+    inputpath = DSD100_path + folder_list(idx) + '/';
+    outputpath = binaural_DSD100_path + '/Sources/Test/' + folder_list(idx) + '/';
     
     %Distance from the listener in x and y equally (0.7071 for a diagonal
     %distance of 1)
@@ -77,7 +81,7 @@ for idx = 1:numel(folder_list)
     if ~exist(char(outputpath), 'dir')
         mkdir(char(outputpath))
         disp(outputpath)
-        disp('THE FOLDER DID NOT EXIST, CREATING IT...')
+        disp('THE OUTPUT FOLDER DID NOT EXIST, CREATING IT...')
     end
     
     %Saves the file in the output directory
