@@ -5,12 +5,12 @@
 %---------------------------------------------------
 
 %Import Two!Ears Auditory Model
-addpath('/Users/gerard/SMC_local/master_thesis/TwoEars-master')
+addpath('your_TwoEars-master_path')
 startTwoEars
 
 %Input and output paths
-DSD100_path = ['/Users/gerard/SMC_local/master_thesis/Files/DSD6/','Sources/Test/']
-binaural_DSD100_path = ['/Users/gerard/SMC_local/master_thesis/bin_dataset/pba_paths']
+DSD100_path = ['your_DSD100_path']
+binaural_DSD100_path = ['your_output_path']
 
 s = dir(DSD100_path);
 
