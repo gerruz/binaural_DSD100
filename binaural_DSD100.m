@@ -1,20 +1,31 @@
-%DSD100 directory
+%---------------------------------------------------
+%Needed variables: 1. Path to TwoEars-master folder
+%                  2. Path to DSD100 dataset
+%                  3. Output path
+%---------------------------------------------------
 
-DSD100_path = 'your_DSD100_path' + 'Sources/Test/'
-binaural_DSD100_path = 'your_output_folder'
+%Import Two!Ears Auditory Model
+addpath('/Users/gerard/SMC_local/master_thesis/TwoEars-master')
+startTwoEars
+
+%Input and output paths
+DSD100_path = ['/Users/gerard/SMC_local/master_thesis/Files/DSD6/','Sources/Test/']
+binaural_DSD100_path = ['/Users/gerard/SMC_local/master_thesis/bin_dataset/pba_paths']
 
 s = dir(DSD100_path);
 
 %It takes the names of each song folder
 folder_list = {s.name};
-folder_list = string(folder_list(3:end));
+%Make sure it takes only the correct folders (avoid '.', '..' and other
+%hidden folders) by properly modifying the start number of the array
+folder_list = string(folder_list(4:end));
 
 %For loop for all DSD100 dataset
 for idx = 1:numel(folder_list)
     
     %Input and output path for each song
-    inputpath = DSD100_path + folder_list(idx) + '/';
-    outputpath = binaural_DSD100_path + '/Sources/Test/' + folder_list(idx) + '/';
+    inputpath = [char(DSD100_path) char(folder_list(idx)) '/']
+    outputpath = [char(binaural_DSD100_path) '/Sources/Test/' char(folder_list(idx)) '/']
     
     %Distance from the listener in x and y equally (0.7071 for a diagonal
     %distance of 1)
@@ -34,7 +45,7 @@ for idx = 1:numel(folder_list)
         'AudioBuffer', simulator.buffer.FIFO(1) ...
         );
     set(sim.Sources{1}.AudioBuffer, ...
-        'File', char(inputpath + 'drums.wav') ...
+        'File', [inputpath 'drums.wav'] ...
         );
     set(sim.Sources{2}, ...
         'Name', 'vocals', ...
@@ -42,7 +53,7 @@ for idx = 1:numel(folder_list)
         'AudioBuffer', simulator.buffer.FIFO(1) ...
         );
     set(sim.Sources{2}.AudioBuffer, ...
-        'File', char(inputpath + 'vocals.wav') ...
+        'File', [inputpath 'vocals.wav'] ...
         );
     set(sim.Sources{3}, ...
         'Name', 'bass', ...
@@ -50,7 +61,7 @@ for idx = 1:numel(folder_list)
         'AudioBuffer', simulator.buffer.FIFO(1) ...
         );
     set(sim.Sources{3}.AudioBuffer, ...
-        'File', char(inputpath +  'bass.wav') ...
+        'File', [inputpath 'bass.wav'] ...
         );
     set(sim.Sources{4}, ...
         'Name', 'other', ...
@@ -58,7 +69,7 @@ for idx = 1:numel(folder_list)
         'AudioBuffer', simulator.buffer.FIFO(1) ...
         );
     set(sim.Sources{4}.AudioBuffer, ...
-        'File', char(inputpath + 'other.wav') ...
+        'File', [inputpath 'other.wav'] ...
         );
     set(sim.Sinks, ...
         'Name', 'Head', ...
@@ -78,15 +89,15 @@ for idx = 1:numel(folder_list)
     end
     
     %Checking if the output directory exists. If not, creates it
-    if ~exist(char(outputpath), 'dir')
-        mkdir(char(outputpath))
+    if ~exist(outputpath, 'dir')
+        mkdir(outputpath)
         disp(outputpath)
         disp('THE OUTPUT FOLDER DID NOT EXIST, CREATING IT...')
     end
     
     %Saves the file in the output directory
     data = sim.Sinks.getData();
-    sim.Sinks.saveFile(char(outputpath + 'binaural.wav'),sim.SampleRate);
+    sim.Sinks.saveFile([outputpath 'binaural.wav'],sim.SampleRate);
     sim.plot();
     sim.set('ShutDown',true);
     
